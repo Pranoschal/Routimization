@@ -1,0 +1,418 @@
+<div
+  id="main"
+  style="display: flex; flex-direction: column; color: white; width: 100%"
+>
+  <div style="display: flex; align-items: center; gap: 10px; margin: 20px">
+    <div>
+      <label for="" style="font-size: 28px"
+        ><span style="font-weight: bold">Rou</span>timize</label
+      >
+    </div>
+
+    <div
+      style="display: flex; gap: 8px; margin-left: auto; margin-right: 10px"
+    >
+
+      <div
+        id="glass"
+        style="
+          max-width: 200px;
+          border-radius: 35px;
+          padding: 6px;
+          align-self: center;
+          padding-right: 20px;
+          padding-left: 20px;
+        "
+      >
+        <label for="" style="font-size: 15px; color: #cbcbcb"
+          ><i>{{globalWeatherData.emoji.value}}</i> {{globalWeatherData.emoji.description}}</label
+        >
+      </div>
+
+      <div
+        id="glass"
+        style="
+          max-width: 200px;
+          border-radius: 35px;
+          padding: 6px;
+          align-self: center;
+          padding-right: 25px;
+          padding-left: 25px;
+        "
+      >
+        <label for="" style="font-size: 15px; color: #cbcbcb">
+         {{globalWeatherData.current.temperature_2m}} {{globalWeatherData.current_units.temperature_2m}}
+        </label
+        >
+      </div>
+      <div
+        id="glass"
+        style="
+          max-width: 200px;
+          border-radius: 35px;
+          padding: 6px;
+          align-self: center;
+          padding-right: 25px;
+          padding-left: 25px;
+        "
+      >
+        <label for="" style="font-size: 15px; color: #cbcbcb">
+         Feels Like {{globalWeatherData.current.apparent_temperature}} {{globalWeatherData.current_units.apparent_temperature}}
+        </label
+        >
+      </div>
+      <div
+        id="glass"
+        style="
+          max-width: 200px;
+          border-radius: 35px;
+          padding: 6px;
+          align-self: center;
+          padding-right: 25px;
+          padding-left: 25px;
+        "
+      >
+        <label for="" style="font-size: 15px; color: #cbcbcb">
+         Humidity {{globalWeatherData.current.relative_humidity_2m}} {{globalWeatherData.current_units.relative_humidity_2m}}
+        </label>
+      </div>
+      <div
+        id="glass"
+        style="
+          max-width: 200px;
+          border-radius: 35px;
+          padding: 6px;
+          align-self: center;
+          padding-right: 25px;
+          padding-left: 25px;
+        "
+      >
+        <label for="" style="font-size: 15px; color: #cbcbcb">
+         Wind Speed {{globalWeatherData.current.wind_speed_10m}} {{globalWeatherData.current_units.wind_speed_10m}}
+        </label>
+      </div>
+      <div
+        id="glass"
+        style="
+          max-width: 200px;
+          border-radius: 35px;
+          padding: 6px;
+          align-self: center;
+          padding-right: 25px;
+          padding-left: 25px;
+        "
+      >
+        <label for="" style="font-size: 15px; color: #cbcbcb">
+         Wind Direction {{globalWeatherData.current.is_day}} {{globalWeatherData.current_units.wind_direction_10m}}
+        </label>
+      </div>
+      
+      <div
+        id="glass"
+        style="
+          max-width: 200px;
+          border-radius: 35px;
+          padding: 6px;
+          align-self: center;
+          padding-right: 25px;
+          padding-left: 25px;
+        "
+        (click)="triggerFileUpload()"
+      >
+        <label
+          for="fileUpload"
+          style="font-size: 15px; color: #cbcbcb"
+          (click)="preventDoubleClick($event)"
+        >
+          <i class="fas fa-upload"></i>
+        </label>
+      </div>
+      <input
+        type="file"
+        id="fileUpload"
+        #fileInput
+        style="display: none"
+        (change)="onFileChange($event)"
+      />
+    </div>
+  </div>
+
+  <div id="mapss" style="width: 100%; height: 90vh; display: flex">
+    <div
+      id="map"
+      style="
+        width: 60%;
+        margin: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      "
+    >
+      <!-- <label for="">Map will come here</label> -->
+      <div #map style="width: 100%; height: 100%; border-radius: 16px"></div>
+    </div>
+
+    <div style="width: 40%; margin-top: 20px">
+      <label for="" style="font-size: 20px">Your Trip For Today</label>
+      <div *ngIf="this.data?.length > 1" style="width: 100%; display: flex">
+        <!-- <label for="" style="font-size: 16px;">Store</label> -->
+        <!-- <label for="" style="font-size: 16px; margin-left: auto; margin-right: 50px;">Campaign</label> -->
+
+        <div
+          style="
+            display: flex;
+            gap: 10px;
+            margin-left: auto;
+            margin-right: 30px;
+            margin-top: 10px;
+          "
+        >
+          <div
+            id="glass"
+            style="
+              max-width: 200px;
+              border-radius: 35px;
+              padding: 6px;
+              align-self: center;
+              padding-right: 25px;
+              padding-left: 25px;
+              width: fit-content;
+            "
+          >
+            <label for="" style="font-size: 16px; color: #cbcbcb"
+              >Total Dist : {{ totalKm }} Km</label
+            >
+          </div>
+          <div
+            id="glass"
+            style="
+              border-radius: 35px;
+              padding: 6px;
+              align-self: center;
+              padding-right: 25px;
+              padding-left: 25px;
+              width: fit-content;
+            "
+          >
+            <label for="" style="font-size: 16px; color: #cbcbcb"
+              >Total Time : {{ totalTime }}</label
+            >
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="routes && routes.length > 0">
+        <div
+          *ngFor="let item of routes;let i=index"
+          id="stop"
+          [style.backgroundColor]="i === selectedIndex ? '#707070' : 'transparent'"
+          style="max-width: 92%; display: flex; padding: 12px; margin-top: 10px"
+          (click)="onTravelItemClick(item, i)"
+        >
+          <label for="">{{ item.campaignName }}</label>
+          <div style="margin-left: auto; display: flex; gap: 12px">
+            <label for="">{{ item.storename }}</label>
+            <label *ngIf="item.status" for=""
+              ><i class="fas fa-check-circle"></i
+            ></label>
+            <label *ngIf="!item.reached" for=""
+              ><i class="fas fa-times-circle"></i
+            ></label>
+          </div>
+        </div>
+      </div>
+
+      <div
+        style="
+          margin-top: 12px;
+          display: flex;
+          gap: 12px;
+          max-width: 96%;
+          text-align: center;
+          cursor: pointer;
+        "
+      >
+        <div
+          (click)="changeRoute('home')"
+          id="stop"
+          style="
+            display: flex;
+            padding: 12px;
+            margin-top: 10px;
+            width: fit-content;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+          "
+          [ngStyle]="{
+            'background-color': currentMiniRoute == 'home' ? 'white' : '',
+            color: currentMiniRoute == 'home' ? 'black' : ''
+          }"
+        >
+          <label for=""><i class="fas fa-home"></i></label>
+        </div>
+        <div
+          [ngStyle]="{
+            'background-color': currentMiniRoute == 'petrol' ? 'white' : '',
+            color: currentMiniRoute == 'petrol' ? 'black' : ''
+          }"
+          (click)="changeRoute('petrol')"
+          id="stop"
+          style="
+            display: flex;
+            padding: 12px;
+            margin-top: 10px;
+            flex: 1;
+            align-items: center;
+            justify-content: center;
+          "
+        >
+          <label for=""><i class="fas fa-gas-pump"></i> Petrol/EV</label>
+        </div>
+        <div
+          (click)="changeRoute('hospital')"
+          [ngStyle]="{
+            'background-color': currentMiniRoute == 'hospital' ? 'white' : '',
+            color: currentMiniRoute == 'hospital' ? 'black' : ''
+          }"
+          id="stop"
+          style="
+            display: flex;
+            padding: 12px;
+            margin-top: 10px;
+            flex: 1;
+            justify-content: center;
+          "
+        >
+          <label for=""><i class="fas fa-hospital"></i> Hospital</label>
+        </div>
+        <div
+          (click)="changeRoute('hotel')"
+          [ngStyle]="{
+            'background-color': currentMiniRoute == 'hotel' ? 'white' : '',
+            color: currentMiniRoute == 'hotel' ? 'black' : ''
+          }"
+          id="stop"
+          style="
+            display: flex;
+            padding: 12px;
+            margin-top: 10px;
+            flex: 1;
+            justify-content: center;
+          "
+        >
+          <label for=""><i class="fas fa-hotel"></i> Hotel</label>
+        </div>
+      </div>
+
+      <div
+        *ngIf="currentMiniRoute == 'home'"
+        id="stop"
+        style="
+          max-width: 92%;
+          padding: 12px;
+          margin-top: 24px;
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+        "
+      >
+        <label for="" style="margin-left: auto"
+          >Campaign Timeline : 10:30 - 14:30</label
+        >
+        <label for="">Next Stop : {{ this.routes[0].campaignName }}</label>
+        <div style="margin-left: auto; display: flex; gap: 12px">
+          <label for=""><i class="fas fa-map-marker-alt"></i> 234 miles</label>
+          <label for="">ETA : 2hrs 5mins</label>
+        </div>
+      </div>
+
+      <div
+        *ngIf="currentMiniRoute == 'petrol'"
+        id="stop"
+        style="
+          max-width: 92%;
+          padding: 12px;
+          margin-top: 24px;
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+        "
+      >
+        <div style="display: flex; justify-content: space-between">
+          <label for="">Fuel Pump</label>
+          <label for=""><i class="fas fa-map-marker-alt"></i> 234 miles</label>
+          <label for="">ETA : 2hrs 5mins</label>
+        </div>
+        <div style="display: flex; justify-content: space-between">
+          <label for="">Fuel Pump</label>
+          <label for=""><i class="fas fa-map-marker-alt"></i> 234 miles</label>
+          <label for="">ETA : 2hrs 5mins</label>
+        </div>
+        <div style="display: flex; justify-content: space-between">
+          <label for="">Fuel Pump</label>
+          <label for=""><i class="fas fa-map-marker-alt"></i> 234 miles</label>
+          <label for="">ETA : 2hrs 5mins</label>
+        </div>
+      </div>
+
+      <div
+        *ngIf="currentMiniRoute == 'hospital'"
+        id="stop"
+        style="
+          max-width: 92%;
+          padding: 12px;
+          margin-top: 24px;
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+        "
+      >
+        <div style="display: flex; justify-content: space-between">
+          <label for="">Apollo</label>
+          <label for=""><i class="fas fa-map-marker-alt"></i> 234 miles</label>
+          <label for="">ETA : 2hrs 5mins</label>
+        </div>
+        <div style="display: flex; justify-content: space-between">
+          <label for="">Poly Clinic</label>
+          <label for=""><i class="fas fa-map-marker-alt"></i> 234 miles</label>
+          <label for="">ETA : 2hrs 5mins</label>
+        </div>
+        <div style="display: flex; justify-content: space-between">
+          <label for="">Fortes</label>
+          <label for=""><i class="fas fa-map-marker-alt"></i> 234 miles</label>
+          <label for="">ETA : 2hrs 5mins</label>
+        </div>
+      </div>
+
+      <div
+        *ngIf="currentMiniRoute == 'hotel'"
+        id="stop"
+        style="
+          max-width: 92%;
+          padding: 12px;
+          margin-top: 24px;
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+        "
+      >
+        <div style="display: flex; justify-content: space-between">
+          <label for="">Alder Stays</label>
+          <label for=""><i class="fas fa-map-marker-alt"></i> 234 miles</label>
+          <label for="">ETA : 2hrs 5mins</label>
+        </div>
+        <div style="display: flex; justify-content: space-between">
+          <label for="">Radison Blu</label>
+          <label for=""><i class="fas fa-map-marker-alt"></i> 234 miles</label>
+          <label for="">ETA : 2hrs 5mins</label>
+        </div>
+        <div style="display: flex; justify-content: space-between">
+          <label for="">Taj</label>
+          <label for=""><i class="fas fa-map-marker-alt"></i> 234 miles</label>
+          <label for="">ETA : 2hrs 5mins</label>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
