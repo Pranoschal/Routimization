@@ -5,8 +5,9 @@ import { ViewChild } from '@angular/core';
 import { TourOptimizationService } from '../services/TourOptimizationService'; // Import the service
 import { WeatherService } from '../services/weather.service';
 import * as XLSX from 'xlsx';
-import { WeatherData } from 'src/types/defined-interfaces';
+import { Amenity, AmenityData, Geometry, WeatherData } from 'src/types/defined-interfaces';
 import { openWeatherWMOToEmoji } from '@akaguny/open-meteo-wmo-to-emoji';
+import { GetAmenitiesService } from '../services/get-amenities.service';
 
 
 @Component({
@@ -17,6 +18,9 @@ import { openWeatherWMOToEmoji } from '@akaguny/open-meteo-wmo-to-emoji';
 export class MapsPageComponent implements AfterViewInit {
 
   currentMiniRoute: any = 'hospital';
+  constructor(private tourOptimizationService: TourOptimizationService, private weatherService: WeatherService,
+    private getAmenityservice: GetAmenitiesService
+  ) {}
 
   @ViewChild('fileInput', { static: false })
   fileInput!: ElementRef;
@@ -29,8 +33,15 @@ export class MapsPageComponent implements AfterViewInit {
   totalKm = ''
   totalTime = ''
   allWeatherUpdates= []
+  allAmenities : AmenityData[] = []
+  specificAmenities : AmenityData = {
+    allAmenities: []
+  }
+  extractedAmenities : Amenity[] = []
   data: any;
   selectedIndex: number | null = null;
+
+  globalAllDeliveries : any[]= []
   globalWeatherData : WeatherData = {
     latitude: 0,
     longitude: 0,
@@ -80,8 +91,9 @@ export class MapsPageComponent implements AfterViewInit {
     emoji:openWeatherWMOToEmoji(0)
   }
 
-  initialWeatherData:any = {}
+ 
 
+  initialWeatherData:any = {}
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
@@ -91,7 +103,6 @@ export class MapsPageComponent implements AfterViewInit {
       this.globalWeatherData = this.initialWeatherData
     }
   }
-
 
   preventDoubleClick(event: MouseEvent) {
     event.stopPropagation();
@@ -105,14 +116,22 @@ export class MapsPageComponent implements AfterViewInit {
     this.selectedIndex = index;
     this.globalWeatherData = this.allWeatherUpdates[this.selectedIndex]
     this.globalWeatherData.emoji = openWeatherWMOToEmoji(this.globalWeatherData.current.weather_code);
+    this.specificAmenities = this.allAmenities[this.selectedIndex]
+    this.extractedAmenities = this.specificAmenities.allAmenities
+    console.log('JHSDBWWJHDB',this.extractedAmenities)
   }
 
+  fetchNearbyAmenities(deliveries: any[], amenityType: string,radius:number = 500) {
+    this.getAmenityservice.getAmenities(deliveries,amenityType,radius).subscribe((response : any)=>{
+      this.allAmenities = response
+      console.log(response)
+    })
+    
+  }
 
   onFileChange(event: any) {
     const target: DataTransfer = <DataTransfer>(event.target);
-
     if (target.files.length !== 1) throw new Error('Cannot use multiple files');
-
     const reader: FileReader = new FileReader();
 
     reader.onload = (e: any) => {
@@ -147,20 +166,15 @@ export class MapsPageComponent implements AfterViewInit {
         allDeliveries.push(delivery)
       }
       requestData.deliveries = allDeliveries;
-  
+      this.globalAllDeliveries = allDeliveries
       this.getOptimizedRoutes(requestData);
+      this.fetchNearbyAmenities(allDeliveries, this.currentMiniRoute,1000);
 
       console.log(requestData)
     };
 
     reader.readAsBinaryString(target.files[0]);
-
-  
-
-
   }
-  // Inject the TourOptimizationService
-  constructor(private tourOptimizationService: TourOptimizationService, private weatherService: WeatherService) {}
 
   ngAfterViewInit(): void {
     const mapProperties = {
@@ -207,9 +221,6 @@ export class MapsPageComponent implements AfterViewInit {
       "globalEndTime": "2024-09-02T06:57:35.000Z"
     }
 
-  
-    
-    // Fetch optimized routes from the backend
   }
 
   getOptimizedRoutes(route_info:any) {
@@ -225,24 +236,19 @@ export class MapsPageComponent implements AfterViewInit {
       longitude: route_info.vehicleStartLocation.longitude
     };
     
-    // Convert ISO 8601 date strings to time strings (e.g., '08:00' format)
     const globalStartTime = "2024-09-01T22:26:26.000Z"
     const globalEndTime = "2024-09-02T06:57:35.000Z"
   
-
-    // Call the service to optimize routes
     this.tourOptimizationService
       .optimizeTours(deliveries, vehicleStartLocation, globalStartTime, globalEndTime)
       .subscribe(
         (response : any) => {
-
           console.log('MYRESPONSE',response)
-          this.routes = response.locationNames
-          this.totalKm = response.totalTravelKM
-          this.totalTime = response.totalTravelTime
-          this.allWeatherUpdates = response.weatherUpdates
-          //  console.log(transformCoordinatesToRoutes(response))
-          this.plotOptimizedRoutes(response.decodedDataToSend); // Assuming the backend returns optimized routes
+          this.routes = response.locationNames;
+          this.totalKm = response.totalTravelKM;
+          this.totalTime = response.totalTravelTime;
+          this.allWeatherUpdates = response.weatherUpdates;
+          this.plotOptimizedRoutes(response.decodedDataToSend);
         },
         (error : any) => {
           console.error('Error optimizing routes:', error);
@@ -251,7 +257,6 @@ export class MapsPageComponent implements AfterViewInit {
   }
 
   plotOptimizedRoutes(optimizedRoutes: any[]) {
-    // Use Google Maps Directions Service to calculate the route
     const directionsService = new google.maps.DirectionsService();
     const directionsRenderer = new google.maps.DirectionsRenderer({
       map: this.map,
@@ -282,8 +287,8 @@ export class MapsPageComponent implements AfterViewInit {
   }
 
   changeRoute(route: string) {
-    if (route === 'petrol') {
-      this.currentMiniRoute = 'petrol';
+    if (route === 'gas_station') {
+      this.currentMiniRoute = 'gas_station';
     } else if (route === 'home') {
       this.currentMiniRoute = 'home';
     } else if (route === 'hospital') {
@@ -291,8 +296,8 @@ export class MapsPageComponent implements AfterViewInit {
     } else if (route === 'hotel') {
       this.currentMiniRoute = 'hotel';
     }
+    this.fetchNearbyAmenities(this.globalAllDeliveries, this.currentMiniRoute,1000);
   }
-
  
 }
  

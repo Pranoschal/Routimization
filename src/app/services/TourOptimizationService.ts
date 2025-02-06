@@ -18,8 +18,6 @@ export class TourOptimizationService {
       globalStartTime,
       globalEndTime
     };
-    console.log('body',body)
-
     return this.http.post(this.apiUrl, body, { headers });
   }
 }

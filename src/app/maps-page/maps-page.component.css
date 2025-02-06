@@ -30,3 +30,69 @@ backdrop-filter: blur(5.6px);
     backdrop-filter: blur(5.6px);
     -webkit-backdrop-filter: blur(5.6px); 
 }
+
+/* Keep your existing glass, main, stop, and map styles */
+
+.scrollable-container {
+    max-height: 200px;
+    overflow-y: auto;
+    padding-right: 10px; /* Add padding for scrollbar */
+    
+    /* Firefox scrollbar styling */
+    scrollbar-width: thin;
+    scrollbar-color: rgba(75, 75, 75, 0.5) transparent;
+    
+    /* Webkit scrollbar styling */
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+    
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background-color: rgba(75, 75, 75, 0.5);
+      border-radius: 3px;
+    }
+    
+    &::-webkit-scrollbar-thumb:hover {
+      background-color: rgba(75, 75, 75, 0.7);
+    }
+  }
+  
+  .amenity-card {
+    background-color: #2c2c2c;
+    padding: 12px 16px;  /* Increased padding */
+    border-radius: 8px;
+    margin: 8px 0;
+    color: white;
+  }
+  
+  .amenity-details {
+    display: grid;  /* Changed to grid layout */
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr);  /* 3-column layout */
+    gap: 16px;  /* Space between columns */
+    align-items: center;
+  }
+  
+  .amenity-name {
+    font-weight: bold;
+    word-wrap: break-word;  /* Allow text to wrap */
+    white-space: normal;  /* Allow multiple lines */
+    line-height: 1.2;  /* Proper line height for readability */
+    min-width: 0;  /* Allows text to shrink in grid */
+  }
+  
+  .amenity-status {
+    display: flex;
+    align-items: center;
+    gap: 4px;  /* Space between icon and text */
+    white-space: nowrap;  /* Keep "Closed" on one line */
+  }
+  
+  .eta {
+    text-align: right;
+    white-space: nowrap;  /* Keep ETA on one line */
+  }
+  

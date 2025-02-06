@@ -9,10 +9,7 @@
       >
     </div>
 
-    <div
-      style="display: flex; gap: 8px; margin-left: auto; margin-right: 10px"
-    >
-
+    <div style="display: flex; gap: 8px; margin-left: auto; margin-right: 10px">
       <div
         id="glass"
         style="
@@ -25,7 +22,8 @@
         "
       >
         <label for="" style="font-size: 15px; color: #cbcbcb"
-          ><i>{{globalWeatherData.emoji.value}}</i> {{globalWeatherData.emoji.description}}</label
+          ><i>{{ globalWeatherData.emoji.value }}</i>
+          {{ globalWeatherData.emoji.description }}</label
         >
       </div>
 
@@ -41,39 +39,8 @@
         "
       >
         <label for="" style="font-size: 15px; color: #cbcbcb">
-         {{globalWeatherData.current.temperature_2m}} {{globalWeatherData.current_units.temperature_2m}}
-        </label
-        >
-      </div>
-      <div
-        id="glass"
-        style="
-          max-width: 200px;
-          border-radius: 35px;
-          padding: 6px;
-          align-self: center;
-          padding-right: 25px;
-          padding-left: 25px;
-        "
-      >
-        <label for="" style="font-size: 15px; color: #cbcbcb">
-         Feels Like {{globalWeatherData.current.apparent_temperature}} {{globalWeatherData.current_units.apparent_temperature}}
-        </label
-        >
-      </div>
-      <div
-        id="glass"
-        style="
-          max-width: 200px;
-          border-radius: 35px;
-          padding: 6px;
-          align-self: center;
-          padding-right: 25px;
-          padding-left: 25px;
-        "
-      >
-        <label for="" style="font-size: 15px; color: #cbcbcb">
-         Humidity {{globalWeatherData.current.relative_humidity_2m}} {{globalWeatherData.current_units.relative_humidity_2m}}
+          {{ globalWeatherData.current.temperature_2m }}
+          {{ globalWeatherData.current_units.temperature_2m }}
         </label>
       </div>
       <div
@@ -88,7 +55,8 @@
         "
       >
         <label for="" style="font-size: 15px; color: #cbcbcb">
-         Wind Speed {{globalWeatherData.current.wind_speed_10m}} {{globalWeatherData.current_units.wind_speed_10m}}
+          Feels Like {{ globalWeatherData.current.apparent_temperature }}
+          {{ globalWeatherData.current_units.apparent_temperature }}
         </label>
       </div>
       <div
@@ -103,10 +71,43 @@
         "
       >
         <label for="" style="font-size: 15px; color: #cbcbcb">
-         Wind Direction {{globalWeatherData.current.is_day}} {{globalWeatherData.current_units.wind_direction_10m}}
+          Humidity {{ globalWeatherData.current.relative_humidity_2m }}
+          {{ globalWeatherData.current_units.relative_humidity_2m }}
         </label>
       </div>
-      
+      <div
+        id="glass"
+        style="
+          max-width: 200px;
+          border-radius: 35px;
+          padding: 6px;
+          align-self: center;
+          padding-right: 25px;
+          padding-left: 25px;
+        "
+      >
+        <label for="" style="font-size: 15px; color: #cbcbcb">
+          Wind Speed {{ globalWeatherData.current.wind_speed_10m }}
+          {{ globalWeatherData.current_units.wind_speed_10m }}
+        </label>
+      </div>
+      <div
+        id="glass"
+        style="
+          max-width: 200px;
+          border-radius: 35px;
+          padding: 6px;
+          align-self: center;
+          padding-right: 25px;
+          padding-left: 25px;
+        "
+      >
+        <label for="" style="font-size: 15px; color: #cbcbcb">
+          Wind Direction {{ globalWeatherData.current.is_day }}
+          {{ globalWeatherData.current_units.wind_direction_10m }}
+        </label>
+      </div>
+
       <div
         id="glass"
         style="
@@ -203,9 +204,11 @@
 
       <div *ngIf="routes && routes.length > 0">
         <div
-          *ngFor="let item of routes;let i=index"
+          *ngFor="let item of routes; let i = index"
           id="stop"
-          [style.backgroundColor]="i === selectedIndex ? '#707070' : 'transparent'"
+          [style.backgroundColor]="
+            i === selectedIndex ? '#707070' : 'transparent'
+          "
           style="max-width: 92%; display: flex; padding: 12px; margin-top: 10px"
           (click)="onTravelItemClick(item, i)"
         >
@@ -253,10 +256,10 @@
         </div>
         <div
           [ngStyle]="{
-            'background-color': currentMiniRoute == 'petrol' ? 'white' : '',
-            color: currentMiniRoute == 'petrol' ? 'black' : ''
+            'background-color': currentMiniRoute == 'gas_station' ? 'white' : '',
+            color: currentMiniRoute == 'gas_station' ? 'black' : ''
           }"
-          (click)="changeRoute('petrol')"
+          (click)="changeRoute('gas_station')"
           id="stop"
           style="
             display: flex;
@@ -267,7 +270,7 @@
             justify-content: center;
           "
         >
-          <label for=""><i class="fas fa-gas-pump"></i> Petrol/EV</label>
+          <label for=""><i class="fas fa-gas-pump"></i> Gas Station</label>
         </div>
         <div
           (click)="changeRoute('hospital')"
@@ -328,7 +331,7 @@
       </div>
 
       <div
-        *ngIf="currentMiniRoute == 'petrol'"
+        *ngIf="currentMiniRoute == 'gas_station'"
         id="stop"
         style="
           max-width: 92%;
@@ -339,21 +342,21 @@
           gap: 12px;
         "
       >
-        <div style="display: flex; justify-content: space-between">
-          <label for="">Fuel Pump</label>
-          <label for=""><i class="fas fa-map-marker-alt"></i> 234 miles</label>
-          <label for="">ETA : 2hrs 5mins</label>
+        <div *ngIf="extractedAmenities.length > 0; else noAmenities" class="scrollable-container">
+          <div *ngFor="let amenity of extractedAmenities" class="amenity-card">
+            <div class="amenity-details">
+              <div class="amenity-name">{{ amenity.name }}</div>
+              <div class="amenity-status">
+                <i class="fas fa-map-marker-alt"></i>
+                {{ amenity.opening_hours?.open_now ? "Open Now" : "Closed" }}
+              </div>
+              <div class="eta">ETA: 2hrs 5mins</div>
+            </div>
+          </div>
         </div>
-        <div style="display: flex; justify-content: space-between">
-          <label for="">Fuel Pump</label>
-          <label for=""><i class="fas fa-map-marker-alt"></i> 234 miles</label>
-          <label for="">ETA : 2hrs 5mins</label>
-        </div>
-        <div style="display: flex; justify-content: space-between">
-          <label for="">Fuel Pump</label>
-          <label for=""><i class="fas fa-map-marker-alt"></i> 234 miles</label>
-          <label for="">ETA : 2hrs 5mins</label>
-        </div>
+        <ng-template #noAmenities>
+          <div>No amenities found nearby.</div>
+        </ng-template>
       </div>
 
       <div
@@ -368,21 +371,22 @@
           gap: 12px;
         "
       >
-        <div style="display: flex; justify-content: space-between">
-          <label for="">Apollo</label>
-          <label for=""><i class="fas fa-map-marker-alt"></i> 234 miles</label>
-          <label for="">ETA : 2hrs 5mins</label>
+        <div *ngIf="extractedAmenities.length > 0; else noAmenities" class="scrollable-container">
+          <div *ngFor="let amenity of extractedAmenities" class="amenity-card">
+            <div class="amenity-details">
+              <div class="amenity-name">{{ amenity.name }}</div>
+              <div class="amenity-status">
+                <i class="fas fa-map-marker-alt"></i>
+                {{ amenity.opening_hours?.open_now ? "Open Now" : "Closed" }}
+              </div>
+              <div class="eta">ETA: 2hrs 5mins</div>
+            </div>
+          </div>
         </div>
-        <div style="display: flex; justify-content: space-between">
-          <label for="">Poly Clinic</label>
-          <label for=""><i class="fas fa-map-marker-alt"></i> 234 miles</label>
-          <label for="">ETA : 2hrs 5mins</label>
-        </div>
-        <div style="display: flex; justify-content: space-between">
-          <label for="">Fortes</label>
-          <label for=""><i class="fas fa-map-marker-alt"></i> 234 miles</label>
-          <label for="">ETA : 2hrs 5mins</label>
-        </div>
+
+        <ng-template #noAmenities>
+          <div>No amenities found nearby.</div>
+        </ng-template>
       </div>
 
       <div
@@ -397,21 +401,23 @@
           gap: 12px;
         "
       >
-        <div style="display: flex; justify-content: space-between">
-          <label for="">Alder Stays</label>
-          <label for=""><i class="fas fa-map-marker-alt"></i> 234 miles</label>
-          <label for="">ETA : 2hrs 5mins</label>
+         <div *ngIf="extractedAmenities.length > 0; else noAmenities" class="scrollable-container">
+          <div *ngFor="let amenity of extractedAmenities" class="amenity-card">
+            <div class="amenity-details">
+              <div class="amenity-name">{{ amenity.name }}</div>
+              <div class="amenity-status">
+                <i class="fas fa-map-marker-alt"></i>
+                {{ amenity.opening_hours?.open_now ? "Open Now" : "Closed" }}
+              </div>
+              <div class="eta">ETA: 2hrs 5mins</div>
+            </div>
+          </div>
         </div>
-        <div style="display: flex; justify-content: space-between">
-          <label for="">Radison Blu</label>
-          <label for=""><i class="fas fa-map-marker-alt"></i> 234 miles</label>
-          <label for="">ETA : 2hrs 5mins</label>
-        </div>
-        <div style="display: flex; justify-content: space-between">
-          <label for="">Taj</label>
-          <label for=""><i class="fas fa-map-marker-alt"></i> 234 miles</label>
-          <label for="">ETA : 2hrs 5mins</label>
-        </div>
+
+        <ng-template #noAmenities>
+          <div>No amenities found nearby.</div>
+        </ng-template>
+      
       </div>
     </div>
   </div>
