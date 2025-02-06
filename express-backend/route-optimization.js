@@ -214,7 +214,7 @@ app.post("/getAmenities", async (req, res) => {
         location: `${latitude},${longitude}`,
         radius: radius,
         type: type,
-        key: 'AIzaSyADXely4x69JhigS8GUqAln_B3_zGnX4pw'
+        key: process.env.GOOGLE_MAPS_API_KEY
       }
     });
     res.json({
