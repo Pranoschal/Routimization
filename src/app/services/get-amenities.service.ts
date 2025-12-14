@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { forkJoin, Observable } from 'rxjs';
+import { RENDER_DOT_COM_BACKEND_URL } from '../config';
 
 
 @Injectable({
@@ -9,7 +10,9 @@ import { forkJoin, Observable } from 'rxjs';
 export class GetAmenitiesService {
 
   constructor(private http:HttpClient) { }
-  private apiUrl = 'http://localhost:3000/getAmenities';
+  private apiUrl = RENDER_DOT_COM_BACKEND_URL && RENDER_DOT_COM_BACKEND_URL.trim() !== '' 
+    ? `${RENDER_DOT_COM_BACKEND_URL}/getAmenities` 
+    : 'http://localhost:3000/getAmenities';
   getAmenities(deliveries: any[],amenityType:string, radius: number):Observable<any>{
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     const requests = deliveries.map(delivery => {

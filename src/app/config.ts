@@ -1,0 +1,1 @@
+export const RENDER_DOT_COM_BACKEND_URL = "https://routimization.onrender.com"
