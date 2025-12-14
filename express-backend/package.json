@@ -8,6 +8,18 @@
   "start": "node server.js",
   "build": "echo 'No build step required for Express'"
 },
+ "dependencies": {
+    "@akaguny/open-meteo-wmo-to-emoji": "^0.1.0",
+    "@googlemaps/routeoptimization": "^0.1.0",
+    "@mapbox/polyline": "^1.2.1",
+    "@types/googlemaps": "^3.43.3",
+    "axios": "^1.7.9",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "google-polyline": "^1.0.3",
+    "xlsx": "^0.18.5"
+  },
   "author": "",
   "license": "ISC"
 }
