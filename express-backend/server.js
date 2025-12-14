@@ -22,6 +22,16 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
+
+app.get("/health", (req, res) => {
+  res.status(200).json({ 
+    status: "healthy", 
+    message: "Express backend is running",
+    timestamp: new Date().toISOString()
+  });
+});
+
+
 app.post("/optimize-tours", async (req, res) => {
   const { deliveries, vehicleStartLocation, globalStartTime, globalEndTime } =
     req.body;
@@ -228,6 +238,8 @@ app.post("/getAmenities", async (req, res) => {
     });
   }
 });
+
+
 
 app.listen(3000, () => {
   console.log("Server is running on port 3000");
