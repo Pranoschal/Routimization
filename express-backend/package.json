@@ -1,0 +1,13 @@
+{
+  "name": "express-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "route-optimization.js",
+  "scripts": {
+  "test": "echo \"Error: no test specified\" && exit 1",
+  "start": "node server.js",
+  "build": "echo 'No build step required for Express'"
+},
+  "author": "",
+  "license": "ISC"
+}
